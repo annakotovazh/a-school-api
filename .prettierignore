@@ -1,0 +1,9 @@
+dist
+*.json
+# Ignore artifacts:
+build
+coverage
+node_modules
+.env
+
+public/**/*

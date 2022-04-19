@@ -1,0 +1,17 @@
+# Third party
+**/node_modules
+
+# Build
+**/dist/
+./coverage/
+./fixtures/
+
+# Other
+./.circleci/
+./.bitbucket/
+./coverage/
+tools
+index.js
+index.ts
+.eslintrc.js
+prettier.config.js
