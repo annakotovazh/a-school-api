@@ -1,5 +1,6 @@
 # a-school_api
 
+This is API for education app, it can be used to connect teachers and parents by adding some information ( photos, timetable, posts)
 This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
 [initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
 

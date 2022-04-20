@@ -35,7 +35,7 @@ export class ASchoolApiApplication extends BootMixin(
     this.bind(RateLimitSecurityBindings.CONFIG).to({
       name: 'myredis',
       type: 'RedisStore',
-      windowMs: 1 * 60 * 1000, // 24 hours
+      windowMs: 24 * 60 * 60 * 1000, // 24 hours
       max: 1000, // Limit each IP to 1000 requests per `window` (here, per 24 hours)
       message: 'You have exceeded the 1000 requests in 24 hours limit!',
     });
