@@ -1,3 +1,7 @@
+import {AuthenticationComponent} from '@loopback/authentication';
+import {
+  JWTAuthenticationComponent, UserServiceBindings
+} from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
@@ -8,6 +12,7 @@ import {
 } from '@loopback/rest-explorer';
 import {RateLimiterComponent, RateLimitSecurityBindings} from 'loopback4-ratelimiter';
 import path from 'path';
+import {DbDataSource} from './datasources';
 import {MySequence} from './sequence';
 import {LogErrorProvider} from './services';
 
@@ -56,5 +61,12 @@ export class ASchoolApiApplication extends BootMixin(
         nested: true,
       },
     };
+
+        // Mount authentication system
+        this.component(AuthenticationComponent);
+        // Mount jwt component
+        this.component(JWTAuthenticationComponent);
+        // Bind datasource
+        this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
   }
 }

@@ -7,7 +7,7 @@ export class UserProfile extends Entity {
     id: true,
     generated: true,
   })
-  userProfileId?: number;
+  userProfileId: number;
 
   @property({
     type: 'string',

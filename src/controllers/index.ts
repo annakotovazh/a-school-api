@@ -7,3 +7,4 @@ export * from './registration-link.controller';
 export * from './user-profile.controller';
 export * from './post.controller';
 export * from './post-post-type.controller';
+export * from './user.controller';
