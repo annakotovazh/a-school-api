@@ -21,7 +21,16 @@ export {ApplicationConfig};
 export class ASchoolApiApplication extends BootMixin(
   RepositoryMixin(RestApplication),
 ) {
-  constructor(options: ApplicationConfig = {}) {
+  constructor(options: ApplicationConfig = {
+      cors: {
+        origin: '*',
+        methods: 'GET,POST,PATCH,DELETE,PUT,OPTIONS',
+        preflightContinue: true,
+        optionsSuccessStatus: 204,
+        maxAge: 86400,
+        credentials: true
+      }
+    }) {
     super(options);
 
     // Logs

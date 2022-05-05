@@ -1,4 +1,4 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
 import {PostType} from './post-type.model';
 
 @model()
@@ -12,26 +12,29 @@ export class Post extends Entity {
 
   @property({
     type: 'number',
-    required: true,
   })
-  schoolClassId: number;
+  schoolClassId?: number;
 
   @property({
     type: 'number',
-    required: true,
   })
-  userProfileId: number;
+  userProfileId?: number;
 
   @property({
     type: 'string',
   })
-  title?: string;
+  imagePath?: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  description: string;
+  title: string;
+
+  @property({
+    type: 'string',
+  })
+  description?: string;
+
   @property({
     type: 'date',
   })
@@ -43,7 +46,7 @@ export class Post extends Entity {
   dateUpdated?: string;
 
   @belongsTo(() => PostType)
-  postTypeId: number;
+  postTypeId?: number;
 
   constructor(data?: Partial<Post>) {
     super(data);

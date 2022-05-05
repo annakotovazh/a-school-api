@@ -5,11 +5,16 @@ import {
   USER_PROFILE_NOT_FOUND
 } from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {FindRoute, InvokeMethod, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
+import {FindRoute, InvokeMethod, InvokeMiddleware, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
 import {RateLimitAction, RateLimitSecurityBindings} from 'loopback4-ratelimiter';
 import {SequenceService} from './services';
 
+//const SequenceActions = RestBindings.SequenceActions;
+
 export class MySequence implements SequenceHandler {
+  @inject(SequenceActions.INVOKE_MIDDLEWARE, {optional: true})
+  protected invokeMiddleware: InvokeMiddleware = () => false;
+
   constructor(
     @inject(SequenceActions.FIND_ROUTE) protected findRoute: FindRoute,
     @inject(SequenceActions.PARSE_PARAMS) protected parseParams: ParseParams,
@@ -27,7 +32,12 @@ export class MySequence implements SequenceHandler {
     const requestTime = Date.now();
     try {
       const {request, response} = context;
+
+      const finished = await this.invokeMiddleware(context);
+      if (finished) return;
+
       const route = this.findRoute(request);
+
       // - enable jwt auth -
       // call authentication action
       await this.authenticateRequest(request);
