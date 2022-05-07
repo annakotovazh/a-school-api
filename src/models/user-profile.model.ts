@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {AccessRole} from './access-role.model';
 
 @model()
 export class UserProfile extends Entity {
@@ -36,13 +37,6 @@ export class UserProfile extends Entity {
     length: 50
   })
   password: string;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  roleId: string;
-
   @property({
     type: 'date',
   })
@@ -53,6 +47,8 @@ export class UserProfile extends Entity {
   })
   dateUpdated?: string;
 
+  @belongsTo(() => AccessRole)
+  roleId: number;
 
   constructor(data?: Partial<UserProfile>) {
     super(data);
@@ -60,7 +56,7 @@ export class UserProfile extends Entity {
 }
 
 export interface UserProfileRelations {
-  // describe navigational properties here
+  role?: AccessRole;
 }
 
 export type UserProfileWithRelations = UserProfile & UserProfileRelations;

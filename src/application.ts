@@ -11,8 +11,10 @@ import {
   RestExplorerComponent
 } from '@loopback/rest-explorer';
 import {RateLimiterComponent, RateLimitSecurityBindings} from 'loopback4-ratelimiter';
+import multer from 'multer';
 import path from 'path';
 import {DbDataSource} from './datasources';
+import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './keys';
 import {MySequence} from './sequence';
 import {LogErrorProvider} from './services';
 
@@ -60,7 +62,10 @@ export class ASchoolApiApplication extends BootMixin(
     });
     this.component(RestExplorerComponent);
 
-      this.projectRoot = __dirname;
+        // Configure file upload with multer options
+    this.configureFileUpload(options.fileStorageDirectory);
+
+    this.projectRoot = __dirname;
     // Customize @loopback/boot Booter Conventions here
     this.bootOptions = {
       controllers: {
@@ -78,4 +83,25 @@ export class ASchoolApiApplication extends BootMixin(
         // Bind datasource
         this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
   }
+
+    /**
+   * Configure `multer` options for file upload
+   */
+     protected configureFileUpload(destination?: string) {
+      // Upload files to `dist/.sandbox` by default
+      destination = destination ?? path.join(__dirname, '../files');
+      this.bind(STORAGE_DIRECTORY).to(destination);
+      const multerOptions: multer.Options = {
+        storage: multer.diskStorage({
+          destination,
+          // Use the original file name as is
+          filename: (req, file, cb) => {
+            console.log(file);
+            cb(null, file.originalname);
+          },
+        }),
+      };
+      // Configure the file upload service with multer options
+      this.configure(FILE_UPLOAD_SERVICE).to(multerOptions);
+    }
 }

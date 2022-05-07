@@ -8,3 +8,6 @@ export * from './user-profile.controller';
 export * from './post.controller';
 export * from './post-post-type.controller';
 export * from './user.controller';
+export * from './announcement.controller';
+export * from './user-profile-access-role.controller';
+export * from './file.controller';

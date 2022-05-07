@@ -6,3 +6,4 @@ export * from './registration-link.model';
 export * from './school-class.model';
 export * from './user-profile.model';
 
+export * from './announcement.model';

@@ -5,3 +5,4 @@ export * from './post-type.repository';
 export * from './post.repository';
 export * from './registration-link.repository';
 export * from './user-profile.repository';
+export * from './announcement.repository';
