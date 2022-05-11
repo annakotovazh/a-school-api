@@ -17,6 +17,7 @@ import {DbDataSource} from './datasources';
 import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './keys';
 import {MySequence} from './sequence';
 import {LogErrorProvider} from './services';
+const uuid = require("uuid")
 
 export {ApplicationConfig};
 
@@ -94,9 +95,10 @@ export class ASchoolApiApplication extends BootMixin(
       const multerOptions: multer.Options = {
         storage: multer.diskStorage({
           destination,
-          // Use the original file name as is
+
           filename: (req, file, cb) => {
-            console.log(file);
+            // generate unique file name
+            file.originalname = uuid.v4() + file.originalname.split('.').pop();
             cb(null, file.originalname);
           },
         }),

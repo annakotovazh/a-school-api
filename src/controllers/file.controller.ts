@@ -12,7 +12,7 @@ import {
 import path from 'path';
 import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from '../keys';
 import {FileUploadHandler} from '../types';
-const uuid = require("uuid")
+
 
 /**
  * A controller to handle file uploads using multipart/form-data media type
@@ -83,10 +83,10 @@ export class FileUploadController {
    */
   private static getFilesAndFields(request: Request) {
     const uploadedFiles = request.files;
+
     const mapper = (f: globalThis.Express.Multer.File) => ({
       fieldname: f.fieldname,
       originalname: f.originalname,
-      savedfilename: uuid.v4() + '.jpg',
       encoding: f.encoding,
       mimetype: f.mimetype,
       size: f.size,
