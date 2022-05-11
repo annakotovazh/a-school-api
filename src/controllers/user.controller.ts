@@ -79,7 +79,8 @@ export class UserController {
         [securityId]: user.userProfileId.toString(),
         id: user.userProfileId,
         email: user.email,
-        roleId: user.roleId
+        roleId: user.roleId,
+        imagePath: user.imagePath
       };
 
 

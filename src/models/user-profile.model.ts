@@ -37,6 +37,12 @@ export class UserProfile extends Entity {
     length: 50
   })
   password: string;
+
+  @property({
+    type: 'string'
+  })
+  imagePath: string;
+
   @property({
     type: 'date',
   })
