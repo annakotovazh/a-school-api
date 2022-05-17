@@ -1,17 +1,17 @@
+import {authenticate} from '@loopback/authentication';
 import {
-  repository,
+  repository
 } from '@loopback/repository';
 import {
-  param,
   get,
-  getModelSchemaRef,
+  getModelSchemaRef, param
 } from '@loopback/rest';
 import {
-  UserProfile,
-  AccessRole,
+  AccessRole, UserProfile
 } from '../models';
 import {UserProfileRepository} from '../repositories';
 
+@authenticate('jwt')
 export class UserProfileAccessRoleController {
   constructor(
     @repository(UserProfileRepository)

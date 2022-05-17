@@ -1,21 +1,16 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-  response,
+  del, get,
+  getModelSchemaRef, param, patch, post, put, requestBody,
+  response
 } from '@loopback/rest';
 import {UserProfile} from '../models';
 import {UserProfileRepository} from '../repositories';
@@ -47,17 +42,7 @@ export class UserProfileController {
     return this.userProfileRepository.create(userProfile);
   }
 
-  @get('/user-profiles/count')
-  @response(200, {
-    description: 'UserProfile model count',
-    content: {'application/json': {schema: CountSchema}},
-  })
-  async count(
-    @param.where(UserProfile) where?: Where<UserProfile>,
-  ): Promise<Count> {
-    return this.userProfileRepository.count(where);
-  }
-
+  @authenticate('jwt')
   @get('/user-profiles')
   @response(200, {
     description: 'Array of UserProfile model instances',
@@ -76,6 +61,7 @@ export class UserProfileController {
     return this.userProfileRepository.find(filter);
   }
 
+  @authenticate('jwt')
   @patch('/user-profiles')
   @response(200, {
     description: 'UserProfile PATCH success count',
@@ -95,6 +81,7 @@ export class UserProfileController {
     return this.userProfileRepository.updateAll(userProfile, where);
   }
 
+  @authenticate('jwt')
   @get('/user-profiles/{id}')
   @response(200, {
     description: 'UserProfile model instance',
@@ -111,6 +98,7 @@ export class UserProfileController {
     return this.userProfileRepository.findById(id, filter);
   }
 
+  @authenticate('jwt')
   @patch('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PATCH success',
@@ -129,6 +117,7 @@ export class UserProfileController {
     await this.userProfileRepository.updateById(id, userProfile);
   }
 
+  @authenticate('jwt')
   @put('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PUT success',
@@ -140,6 +129,7 @@ export class UserProfileController {
     await this.userProfileRepository.replaceById(id, userProfile);
   }
 
+  @authenticate('jwt')
   @del('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile DELETE success',
