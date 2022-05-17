@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 import {ApplicationConfig, ASchoolApiApplication} from './application';
 
 export * from './application';
@@ -17,6 +18,9 @@ export async function main(options: ApplicationConfig = {}) {
 }
 
 if (require.main === module) {
+
+  console.log('START');
+
   // Run the application
   const config = {
     rest: {
