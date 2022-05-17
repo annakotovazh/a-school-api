@@ -1,3 +1,4 @@
+// set up dotenv (by default it is using .env)
 require('dotenv').config();
 
 import {ApplicationConfig, ASchoolApiApplication} from './application';
