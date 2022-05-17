@@ -4,10 +4,7 @@ import {juggler} from '@loopback/repository';
 const config = {
   name: 'myredis',
   connector: 'kv-redis',
-  url: 'redis://localhost:6379/',
-  host: 'localhost',
-  port: 6379,
-  password: '',
+  url: process.env.REDIS_URL,
   db: 0
 };
 

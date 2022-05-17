@@ -53,6 +53,7 @@
     "@loopback/repository": "^4.1.2",
     "@loopback/rest": "^11.1.2",
     "@loopback/rest-explorer": "^4.1.2",
+    "dotenv": "^16.0.1",
     "loopback-connector-kv-redis": "^3.0.3",
     "loopback-connector-mysql": "^5.4.4",
     "loopback4-ratelimiter": "^4.0.1",

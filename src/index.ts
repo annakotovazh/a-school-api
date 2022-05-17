@@ -1,3 +1,4 @@
+require('dotenv').config();
 import {ApplicationConfig, ASchoolApiApplication} from './application';
 
 export * from './application';
