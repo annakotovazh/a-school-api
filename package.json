@@ -30,7 +30,7 @@
     "prestart": "npm run rebuild",
     "start": "node -r source-map-support/register .",
     "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
-    "rebuild": "npm run build"
+    "rebuild": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -62,9 +62,7 @@
     "multer": "^1.4.4",
     "tslib": "^2.0.0",
     "ua-parser-js": "^1.0.2",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
+    "uuid": "^8.3.2",
     "@loopback/eslint-config": "^12.0.4",
     "@loopback/testlab": "^4.1.2",
     "@types/express-serve-static-core": "^4.17.28",
@@ -74,5 +72,6 @@
     "eslint": "^8.10.0",
     "source-map-support": "^0.5.21",
     "typescript": "~4.6.3"
-  }
+  },
+  "devDependencies": {}
 }
