@@ -44,6 +44,12 @@ export class UserProfile extends Entity {
   imagePath: string;
 
   @property({
+    type: 'boolean',
+    default: false
+  })
+  isActive: boolean;
+
+  @property({
     type: 'date',
   })
   dateCreated?: string;

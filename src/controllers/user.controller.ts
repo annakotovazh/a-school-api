@@ -66,27 +66,27 @@ export class UserController {
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
   ): Promise<any> {
-      // ensure the user exists, and the password is correct
-      const user = await this.userProfileRepository.findOne({
-        where: {email: credentials.email}, fields: {userProfileId: true, email: true, roleId: true, password: true}, include: ['role']
-      });
+    // ensure the user exists, and the password is correct
+    const user = await this.userProfileRepository.findOne({
+      where: {and: [{email: credentials.email}, {isActive: true}]}, fields: {userProfileId: true, email: true, roleId: true, password: true}, include: ['role']
+    });
 
-      if (!user || user.password !== credentials.password) {
-        throw new HttpErrors.Unauthorized('Invalid email or password.');
-      }
-      // convert a User object into a UserProfile object (reduced set of properties)
-      const userProfile = {
-        [securityId]: user.userProfileId.toString(),
-        id: user.userProfileId,
-        email: user.email,
-        roleId: user.roleId,
-        imagePath: user.imagePath
-      };
-
-
-      // create a JSON Web Token based on the user profile
-      const token = await this.jwtService.generateToken(userProfile);
-      return {id:user.userProfileId, role: user.role?.roleName, token:token};
+    if (!user || user.password !== credentials.password) {
+      throw new HttpErrors.Unauthorized('Invalid email or password.');
     }
+    // convert a User object into a UserProfile object (reduced set of properties)
+    const userProfile = {
+      [securityId]: user.userProfileId.toString(),
+      id: user.userProfileId,
+      email: user.email,
+      roleId: user.roleId,
+      imagePath: user.imagePath
+    };
+
+
+    // create a JSON Web Token based on the user profile
+    const token = await this.jwtService.generateToken(userProfile);
+    return {id: user.userProfileId, role: user.role?.roleName, token: token};
+  }
 
 }
