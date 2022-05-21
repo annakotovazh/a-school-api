@@ -34,7 +34,7 @@ export class UserProfile extends Entity {
   @property({
     type: 'string',
     required: true,
-    length: 50
+    length: 100
   })
   password: string;
 

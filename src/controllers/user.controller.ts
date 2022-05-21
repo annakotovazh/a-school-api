@@ -8,7 +8,11 @@ import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors, post, requestBody, SchemaObject} from '@loopback/rest';
 import {SecurityBindings, securityId, UserProfile as SecurityUserProfile} from '@loopback/security';
+import * as crypto from 'crypto';
 import {UserProfileRepository} from '../repositories';
+
+const encrypt = (contents: string) =>
+  crypto.createHash('sha256').update(contents).digest('hex');
 
 const CredentialsSchema: SchemaObject = {
   type: 'object',
@@ -71,7 +75,9 @@ export class UserController {
       where: {and: [{email: credentials.email}, {isActive: true}]}, fields: {userProfileId: true, email: true, roleId: true, password: true}, include: ['role']
     });
 
-    if (!user || user.password !== credentials.password) {
+    const password_hash = encrypt(credentials.password);
+
+    if (!user || user.password !== password_hash) {
       throw new HttpErrors.Unauthorized('Invalid email or password.');
     }
     // convert a User object into a UserProfile object (reduced set of properties)

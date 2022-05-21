@@ -12,14 +12,17 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
+import * as crypto from 'crypto';
 import {UserProfile} from '../models';
 import {UserProfileRepository} from '../repositories';
 
+const encrypt = (contents: string) =>
+  crypto.createHash('sha256').update(contents).digest('hex');
 export class UserProfileController {
   constructor(
     @repository(UserProfileRepository)
-    public userProfileRepository : UserProfileRepository,
-  ) {}
+    public userProfileRepository: UserProfileRepository,
+  ) { }
 
   @post('/user-profiles')
   @response(200, {
@@ -39,6 +42,10 @@ export class UserProfileController {
     })
     userProfile: Omit<UserProfile, 'userProfileId'>,
   ): Promise<UserProfile> {
+    if (userProfile.password) {
+      const password_hash = encrypt(userProfile.password);
+      userProfile.password = password_hash;
+    }
     return this.userProfileRepository.create(userProfile);
   }
 
@@ -78,6 +85,10 @@ export class UserProfileController {
     userProfile: UserProfile,
     @param.where(UserProfile) where?: Where<UserProfile>,
   ): Promise<Count> {
+    if (userProfile.password) {
+      const password_hash = encrypt(userProfile.password);
+      userProfile.password = password_hash;
+    }
     return this.userProfileRepository.updateAll(userProfile, where);
   }
 
@@ -114,6 +125,10 @@ export class UserProfileController {
     })
     userProfile: UserProfile,
   ): Promise<void> {
+    if (userProfile.password) {
+      const password_hash = encrypt(userProfile.password);
+      userProfile.password = password_hash;
+    }
     await this.userProfileRepository.updateById(id, userProfile);
   }
 
@@ -126,6 +141,10 @@ export class UserProfileController {
     @param.path.number('id') id: number,
     @requestBody() userProfile: UserProfile,
   ): Promise<void> {
+    if (userProfile.password) {
+      const password_hash = encrypt(userProfile.password);
+      userProfile.password = password_hash;
+    }
     await this.userProfileRepository.replaceById(id, userProfile);
   }
 
