@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -27,6 +28,7 @@ export class PostController {
     description: 'Post model instance',
     content: {'application/json': {schema: getModelSchemaRef(Post)}},
   })
+  @authorize({allowedRoles: ['admin', 'teacher']})
   async create(
     @requestBody({
       content: {
@@ -43,11 +45,13 @@ export class PostController {
     return this.postRepository.create(post);
   }
 
+
   @get('/posts/count')
   @response(200, {
     description: 'Post model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent']})
   async count(
     @param.where(Post) where?: Where<Post>,
   ): Promise<Count> {
@@ -66,17 +70,20 @@ export class PostController {
       },
     },
   })
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent']})
   async find(
     @param.filter(Post) filter?: Filter<Post>,
   ): Promise<Post[]> {
     return this.postRepository.find(filter);
   }
 
+
   @patch('/posts')
   @response(200, {
     description: 'Post PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({allowedRoles: ['admin']})
   async updateAll(
     @requestBody({
       content: {
@@ -100,6 +107,7 @@ export class PostController {
       },
     },
   })
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent']})
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Post, {exclude: 'where'}) filter?: FilterExcludingWhere<Post>
@@ -111,6 +119,7 @@ export class PostController {
   @response(204, {
     description: 'Post PATCH success',
   })
+  @authorize({allowedRoles: ['admin', 'teacher']})
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -129,6 +138,7 @@ export class PostController {
   @response(204, {
     description: 'Post PUT success',
   })
+  @authorize({allowedRoles: ['admin', 'teacher']})
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() post: Post,
@@ -140,6 +150,7 @@ export class PostController {
   @response(204, {
     description: 'Post DELETE success',
   })
+  @authorize({allowedRoles: ['admin', 'teacher']})
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.postRepository.deleteById(id);
   }

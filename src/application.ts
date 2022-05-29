@@ -2,6 +2,7 @@ import {AuthenticationComponent} from '@loopback/authentication';
 import {
   JWTAuthenticationComponent, UserServiceBindings
 } from '@loopback/authentication-jwt';
+import {AuthorizationComponent, AuthorizationDecision, AuthorizationOptions, AuthorizationTags} from '@loopback/authorization';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin} from '@loopback/repository';
@@ -15,6 +16,7 @@ import multer from 'multer';
 import path from 'path';
 import {DbDataSource} from './datasources';
 import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './keys';
+import {MyAuthorizationProvider} from './providers/authorization.provider';
 import {MySequence} from './sequence';
 import {LogErrorProvider} from './services';
 const uuid = require("uuid")
@@ -77,12 +79,43 @@ export class ASchoolApiApplication extends BootMixin(
       },
     };
 
-        // Mount authentication system
-        this.component(AuthenticationComponent);
-        // Mount jwt component
-        this.component(JWTAuthenticationComponent);
-        // Bind datasource
-        this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
+    // Mount authentication system
+    this.component(AuthenticationComponent);
+
+    // Mount jwt component
+    this.component(JWTAuthenticationComponent);
+/*
+    const authOptions: AuthorizationOptions = {
+      precedence: AuthorizationDecision.DENY,
+      defaultDecision: AuthorizationDecision.DENY,
+    };
+
+    this.configure(AuthorizationBindings.COMPONENT).to(authOptions);
+    // mount authorization component
+    this.component(AuthorizationComponent);
+
+    // bind the authorizer provider
+    this.bind('authorizationProviders.my-authorizer-provider')
+    .toProvider(MyAuthorizationProvider)
+    .tag(AuthorizationTags.AUTHORIZER);
+*/
+
+    const authOptions: AuthorizationOptions = {
+      precedence: AuthorizationDecision.DENY,
+      defaultDecision: AuthorizationDecision.DENY,
+    };
+
+    const binding = this.component(AuthorizationComponent);
+    this.configure(binding.key).to(authOptions);
+
+    this
+      .bind('authorizationProviders.my-authorizer-provider')
+      .toProvider(MyAuthorizationProvider)
+      .tag(AuthorizationTags.AUTHORIZER);
+
+
+    // Bind datasource
+    this.dataSource(DbDataSource, UserServiceBindings.DATASOURCE_NAME);
   }
 
     /**

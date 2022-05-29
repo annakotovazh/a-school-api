@@ -85,14 +85,14 @@ export class UserController {
       [securityId]: user.userProfileId.toString(),
       id: user.userProfileId,
       email: user.email,
-      roleId: user.roleId,
-      imagePath: user.imagePath
+      name: user.role?.roleName,
+      role: user.role?.roleName
     };
 
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
-    return {id: user.userProfileId, role: user.role?.roleName, token: token};
+    return {id: user.userProfileId, role: user.role?.roleName, imagePath: user.imagePath, token: token};
   }
 
 }

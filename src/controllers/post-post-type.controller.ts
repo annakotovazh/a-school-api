@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   repository
 } from '@loopback/repository';
@@ -13,6 +14,7 @@ import {
 import {PostRepository} from '../repositories';
 
 @authenticate('jwt')
+@authorize({allowedRoles: ['admin', 'teacher']})
 export class PostPostTypeController {
   constructor(
     @repository(PostRepository)

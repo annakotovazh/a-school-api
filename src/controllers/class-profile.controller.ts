@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -16,6 +17,7 @@ import {ClassProfile} from '../models';
 import {ClassProfileRepository} from '../repositories';
 
 @authenticate('jwt')
+@authorize({allowedRoles: ['admin']})
 export class ClassProfileController {
   constructor(
     @repository(ClassProfileRepository)

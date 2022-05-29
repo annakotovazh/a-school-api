@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   repository
 } from '@loopback/repository';
@@ -12,6 +13,7 @@ import {
 import {UserProfileRepository} from '../repositories';
 
 @authenticate('jwt')
+@authorize({allowedRoles: ['admin']})
 export class UserProfileAccessRoleController {
   constructor(
     @repository(UserProfileRepository)

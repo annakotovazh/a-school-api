@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -18,6 +19,7 @@ import {UserProfileRepository} from '../repositories';
 
 const encrypt = (contents: string) =>
   crypto.createHash('sha256').update(contents).digest('hex');
+
 export class UserProfileController {
   constructor(
     @repository(UserProfileRepository)
@@ -49,7 +51,6 @@ export class UserProfileController {
     return this.userProfileRepository.create(userProfile);
   }
 
-  @authenticate('jwt')
   @get('/user-profiles')
   @response(200, {
     description: 'Array of UserProfile model instances',
@@ -62,18 +63,21 @@ export class UserProfileController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async find(
     @param.filter(UserProfile) filter?: Filter<UserProfile>,
   ): Promise<UserProfile[]> {
     return this.userProfileRepository.find(filter);
   }
 
-  @authenticate('jwt')
   @patch('/user-profiles')
   @response(200, {
     description: 'UserProfile PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async updateAll(
     @requestBody({
       content: {
@@ -92,7 +96,6 @@ export class UserProfileController {
     return this.userProfileRepository.updateAll(userProfile, where);
   }
 
-  @authenticate('jwt')
   @get('/user-profiles/{id}')
   @response(200, {
     description: 'UserProfile model instance',
@@ -102,6 +105,8 @@ export class UserProfileController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent'], scopes:['id']})
   async findById(
     @param.path.number('id') id: number,
     @param.filter(UserProfile, {exclude: 'where'}) filter?: FilterExcludingWhere<UserProfile>
@@ -109,11 +114,12 @@ export class UserProfileController {
     return this.userProfileRepository.findById(id, filter);
   }
 
-  @authenticate('jwt')
   @patch('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PATCH success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent'], scopes:['id']})
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -132,11 +138,12 @@ export class UserProfileController {
     await this.userProfileRepository.updateById(id, userProfile);
   }
 
-  @authenticate('jwt')
   @put('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PUT success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() userProfile: UserProfile,
@@ -148,12 +155,15 @@ export class UserProfileController {
     await this.userProfileRepository.replaceById(id, userProfile);
   }
 
-  @authenticate('jwt')
   @del('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile DELETE success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin']})
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.userProfileRepository.deleteById(id);
   }
+
 }
+

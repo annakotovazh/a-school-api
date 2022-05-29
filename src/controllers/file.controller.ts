@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   get,
@@ -18,6 +19,7 @@ import {FileUploadHandler} from '../types';
  * A controller to handle file uploads using multipart/form-data media type
  */
 @authenticate('jwt')
+@authorize({allowedRoles: ['admin', 'teacher', 'parent']})
 export class FileUploadController {
   /**
    * Constructor

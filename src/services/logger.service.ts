@@ -1,4 +1,4 @@
-import {bind, /* inject, */ BindingScope} from '@loopback/core';
+import {bind, BindingScope} from '@loopback/core';
 
 @bind({ scope: BindingScope.APPLICATION })
 export class LoggerService {
@@ -42,7 +42,7 @@ public error(
     });
 }
 
-warn(message: string, fields?: {} | undefined) {
+public warn(message: string, fields?: {} | undefined) {
     this.log(message, {
         ...fields,
         // 'client.js_stack': new Error().stack,

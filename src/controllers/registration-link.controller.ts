@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -16,6 +17,7 @@ import {RegistrationLink} from '../models';
 import {RegistrationLinkRepository} from '../repositories';
 
 @authenticate('jwt')
+@authorize({allowedRoles: ['admin']})
 export class RegistrationLinkController {
   constructor(
     @repository(RegistrationLinkRepository)
