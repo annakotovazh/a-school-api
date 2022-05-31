@@ -45,7 +45,7 @@ export class UserProfileController {
     userProfile: Omit<UserProfile, 'userProfileId'>,
   ): Promise<UserProfile> {
     if (userProfile.password) {
-      const password_hash = encrypt(userProfile.password);
+      const password_hash = encrypt(userProfile.email + userProfile.password + (process.env.ENCRYPTION_SALT? process.env.ENCRYPTION_SALT : ''));
       userProfile.password = password_hash;
     }
     return this.userProfileRepository.create(userProfile);
@@ -90,7 +90,7 @@ export class UserProfileController {
     @param.where(UserProfile) where?: Where<UserProfile>,
   ): Promise<Count> {
     if (userProfile.password) {
-      const password_hash = encrypt(userProfile.password);
+      const password_hash = encrypt(userProfile.email + userProfile.password + (process.env.ENCRYPTION_SALT? process.env.ENCRYPTION_SALT : ''));
       userProfile.password = password_hash;
     }
     return this.userProfileRepository.updateAll(userProfile, where);
@@ -132,7 +132,7 @@ export class UserProfileController {
     userProfile: UserProfile,
   ): Promise<void> {
     if (userProfile.password) {
-      const password_hash = encrypt(userProfile.password);
+      const password_hash = encrypt(userProfile.email + userProfile.password + (process.env.ENCRYPTION_SALT? process.env.ENCRYPTION_SALT : ''));
       userProfile.password = password_hash;
     }
     await this.userProfileRepository.updateById(id, userProfile);
@@ -149,7 +149,7 @@ export class UserProfileController {
     @requestBody() userProfile: UserProfile,
   ): Promise<void> {
     if (userProfile.password) {
-      const password_hash = encrypt(userProfile.password);
+      const password_hash = encrypt(userProfile.email + userProfile.password + (process.env.ENCRYPTION_SALT? process.env.ENCRYPTION_SALT : ''));
       userProfile.password = password_hash;
     }
     await this.userProfileRepository.replaceById(id, userProfile);

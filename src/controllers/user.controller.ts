@@ -72,10 +72,12 @@ export class UserController {
   ): Promise<any> {
     // ensure the user exists, and the password is correct
     const user = await this.userProfileRepository.findOne({
-      where: {and: [{email: credentials.email}, {isActive: true}]}, fields: {userProfileId: true, email: true, roleId: true, password: true}, include: ['role']
+      where: {and: [{email: credentials.email}, {isActive: true}]},
+      fields: {userProfileId: true, email: true, imagePath: true, roleId: true, password: true},
+      include: ['role']
     });
 
-    const password_hash = encrypt(credentials.password);
+    const password_hash = encrypt(credentials.email + credentials.password + (process.env.ENCRYPTION_SALT ? process.env.ENCRYPTION_SALT : ''));
 
     if (!user || user.password !== password_hash) {
       throw new HttpErrors.Unauthorized('Invalid email or password.');
@@ -88,7 +90,6 @@ export class UserController {
       name: user.role?.roleName,
       role: user.role?.roleName
     };
-
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);

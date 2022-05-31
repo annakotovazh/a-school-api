@@ -1,4 +1,5 @@
 import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -21,7 +22,7 @@ export class AnnouncementController {
     @repository(AnnouncementRepository)
     public announcementRepository : AnnouncementRepository,
   ) {}
-
+  @authorize({allowedRoles: ['admin']})
   @post('/announcements')
   @response(200, {
     description: 'Announcement model instance',
@@ -48,6 +49,7 @@ export class AnnouncementController {
     description: 'Announcement model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent']})
   async count(
     @param.where(Announcement) where?: Where<Announcement>,
   ): Promise<Count> {
@@ -66,6 +68,7 @@ export class AnnouncementController {
       },
     },
   })
+
   async find(
     @param.filter(Announcement) filter?: Filter<Announcement>,
   ): Promise<Announcement[]> {
@@ -77,6 +80,7 @@ export class AnnouncementController {
     description: 'Announcement PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authorize({allowedRoles: ['admin']})
   async updateAll(
     @requestBody({
       content: {
@@ -100,6 +104,7 @@ export class AnnouncementController {
       },
     },
   })
+  @authorize({allowedRoles: ['admin', 'teacher', 'parent']})
   async findById(
     @param.path.number('id') id: number,
     @param.filter(Announcement, {exclude: 'where'}) filter?: FilterExcludingWhere<Announcement>
@@ -111,6 +116,7 @@ export class AnnouncementController {
   @response(204, {
     description: 'Announcement PATCH success',
   })
+  @authorize({allowedRoles: ['admin']})
   async updateById(
     @param.path.number('id') id: number,
     @requestBody({
@@ -129,6 +135,7 @@ export class AnnouncementController {
   @response(204, {
     description: 'Announcement PUT success',
   })
+  @authorize({allowedRoles: ['admin']})
   async replaceById(
     @param.path.number('id') id: number,
     @requestBody() announcement: Announcement,
@@ -140,6 +147,7 @@ export class AnnouncementController {
   @response(204, {
     description: 'Announcement DELETE success',
   })
+  @authorize({allowedRoles: ['admin']})
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.announcementRepository.deleteById(id);
   }

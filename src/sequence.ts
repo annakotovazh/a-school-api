@@ -33,6 +33,26 @@ export class MySequence implements SequenceHandler {
     try {
       const {request, response} = context;
 
+      // ***** IP whitelist validation start *****
+      // IP whitelist
+      let validIps = process.env.IP_WHITELIST ? process.env.IP_WHITELIST.split(',') : [];
+
+      if (request?.connection?.remoteAddress && validIps.length > 0) {
+        let clientIp = request.connection.remoteAddress.replace('::ffff:', '');
+
+        if (validIps.includes(clientIp)) {
+          // IP is ok, so go on
+          console.log("IP ok");
+        }
+        else {
+          // Invalid ip
+          console.log("Bad IP: " + clientIp);
+          const err = new Error("Bad IP: " + clientIp);
+          throw (err);
+        }
+      }
+      // ***** IP whitelist validation finish *****
+
       const finished = await this.invokeMiddleware(context);
       if (finished) return;
 
