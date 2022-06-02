@@ -22,12 +22,13 @@ export class AnnouncementController {
     @repository(AnnouncementRepository)
     public announcementRepository : AnnouncementRepository,
   ) {}
-  @authorize({allowedRoles: ['admin']})
+
   @post('/announcements')
   @response(200, {
     description: 'Announcement model instance',
     content: {'application/json': {schema: getModelSchemaRef(Announcement)}},
   })
+  @authorize({allowedRoles: ['admin']})
   async create(
     @requestBody({
       content: {
