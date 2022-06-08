@@ -117,6 +117,7 @@ export class AnnouncementController {
   @response(204, {
     description: 'Announcement PATCH success',
   })
+    //only admin allowed access
   @authorize({allowedRoles: ['admin']})
   async updateById(
     @param.path.number('id') id: number,

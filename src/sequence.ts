@@ -5,7 +5,7 @@ import {
   USER_PROFILE_NOT_FOUND
 } from '@loopback/authentication';
 import {inject} from '@loopback/core';
-import {FindRoute, InvokeMethod, InvokeMiddleware, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
+import {FindRoute, HttpErrors, InvokeMethod, InvokeMiddleware, ParseParams, Reject, RequestContext, Send, SequenceActions, SequenceHandler} from '@loopback/rest';
 import {RateLimitAction, RateLimitSecurityBindings} from 'loopback4-ratelimiter';
 import {SequenceService} from './services';
 
@@ -35,20 +35,19 @@ export class MySequence implements SequenceHandler {
 
       // ***** IP whitelist validation start *****
       // IP whitelist
-      let validIps = process.env.IP_WHITELIST ? process.env.IP_WHITELIST.split(',') : [];
+      const validIps = process.env.IP_WHITELIST ? process.env.IP_WHITELIST.split(',') : [];
 
       if (request?.connection?.remoteAddress && validIps.length > 0) {
         let clientIp = request.connection.remoteAddress.replace('::ffff:', '');
 
         if (validIps.includes(clientIp)) {
           // IP is ok, so go on
-          console.log("IP ok");
+          console.log("IP ok ", clientIp);
         }
         else {
           // Invalid ip
-          console.log("Bad IP: " + clientIp);
-          const err = new Error("Bad IP: " + clientIp);
-          throw (err);
+          console.log("Bad IP: ", clientIp);
+          throw new HttpErrors.Forbidden("Bad IP: " + clientIp);
         }
       }
       // ***** IP whitelist validation finish *****

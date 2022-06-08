@@ -51,7 +51,8 @@ export class UserProfileController {
     }
     return this.userProfileRepository.create(userProfile);
   }
-
+  //
+//get all user profiles
   @get('/user-profiles')
   @response(200, {
     description: 'Array of UserProfile model instances',
@@ -65,6 +66,7 @@ export class UserProfileController {
     },
   })
   @authenticate('jwt')
+    //only admin can get all user profiles
   @authorize({allowedRoles: ['admin']})
   async find(
     @param.filter(UserProfile) filter?: Filter<UserProfile>,
@@ -78,6 +80,7 @@ export class UserProfileController {
     content: {'application/json': {schema: CountSchema}},
   })
   @authenticate('jwt')
+    //only admin can update any user profile
   @authorize({allowedRoles: ['admin']})
   async updateAll(
     @requestBody({
@@ -96,7 +99,7 @@ export class UserProfileController {
     }
     return this.userProfileRepository.updateAll(userProfile, where);
   }
-
+//get user profile by id
   @get('/user-profiles/{id}')
   @response(200, {
     description: 'UserProfile model instance',
@@ -106,6 +109,7 @@ export class UserProfileController {
       },
     },
   })
+    //access allowed only with token
   @authenticate('jwt')
   @authorize({allowedRoles: ['admin', 'teacher', 'parent'], scopes:['id']})
   async findById(
@@ -114,11 +118,12 @@ export class UserProfileController {
   ): Promise<UserProfile> {
     return this.userProfileRepository.findById(id, filter);
   }
-
+//update user profile by id
   @patch('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PATCH success',
   })
+       //access allowed only with token
   @authenticate('jwt')
   @authorize({allowedRoles: ['admin', 'teacher', 'parent'], scopes:['id']})
   async updateById(
@@ -138,7 +143,7 @@ export class UserProfileController {
     }
     await this.userProfileRepository.updateById(id, userProfile);
   }
-
+//put user profile by id
   @put('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile PUT success',
@@ -155,12 +160,13 @@ export class UserProfileController {
     }
     await this.userProfileRepository.replaceById(id, userProfile);
   }
-
+//delete user profile by id
   @del('/user-profiles/{id}')
   @response(204, {
     description: 'UserProfile DELETE success',
   })
   @authenticate('jwt')
+    //only admin can delete any user profile
   @authorize({allowedRoles: ['admin']})
   async deleteById(@param.path.number('id') id: number): Promise<void> {
     await this.userProfileRepository.deleteById(id);
