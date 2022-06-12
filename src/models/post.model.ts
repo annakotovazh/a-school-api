@@ -8,7 +8,7 @@ export class Post extends Entity {
     id: true,
     generated: true,
   })
-  postId?: number;
+  postId: number;
 
   @property({
     type: 'number',
@@ -23,12 +23,12 @@ export class Post extends Entity {
   @property({
     type: 'string',
   })
-  imagePath?: string;
+  imagePath: string;
 
   @property({
     type: 'string',
   })
-  title: string;
+  title?: string;
 
   @property({
     type: 'string',
