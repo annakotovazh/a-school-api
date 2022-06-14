@@ -82,7 +82,7 @@ export class MySequence implements SequenceHandler {
         enabled:true,
         options: {
           windowMs: .5 * 1000, // 0.5 seconds
-          max: rateLimitActionNumber * 1, // Limit each IP to 1 requests per `window` (here, per 0.5 seconds)
+          max: rateLimitActionNumber * 500, // Limit each IP to 1 requests per `window` (here, per 0.5 seconds)
           message: 'You have exceeded the 1 requests in 0.5 seconds limit!'
         }
       });

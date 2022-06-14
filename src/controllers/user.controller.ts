@@ -80,7 +80,6 @@ export class UserController {
     const password_hash = encrypt(credentials.password +
       (process.env.ENCRYPTION_SALT ? process.env.ENCRYPTION_SALT : ''));
 
-    console.log(password_hash);
 //password hash must match provided password
     if (!user || user.password !== password_hash) {
       throw new HttpErrors.Unauthorized('Invalid email or password.');
