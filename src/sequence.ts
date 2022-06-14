@@ -62,8 +62,33 @@ export class MySequence implements SequenceHandler {
       await this.authenticateRequest(request);
       const args = await this.parseParams(request, route);
 
+      // We have two actions: 500 requests per 24 hours and 1 request per .5 seconds
+      const rateLimitActionNumber = 2;
+
+      // Rate Limiter config 1 (24 hours)
+      context.bind(RateLimitSecurityBindings.METADATA).to({
+        enabled:true,
+        options: {
+          windowMs: 24 * 60 * 60 * 1000, // 24 hours
+          max: rateLimitActionNumber * 500, // Limit each IP to 500 requests per `window` (here, per 24 hours)
+          message: 'You have exceeded the 500 requests in 24 hours limit!'
+        }
+      });
       // rate limit Action here
       await this.rateLimitAction(request, response);
+
+      // Rate Limiter config 2 (0.5 seconds)
+      context.bind(RateLimitSecurityBindings.METADATA).to({
+        enabled:true,
+        options: {
+          windowMs: .5 * 1000, // 0.5 seconds
+          max: rateLimitActionNumber * 1, // Limit each IP to 1 requests per `window` (here, per 0.5 seconds)
+          message: 'You have exceeded the 1 requests in 0.5 seconds limit!'
+        }
+      });
+      // rate limit Action here
+      await this.rateLimitAction(request, response);
+
 
       const result = await this.invoke(route, args);
       this.send(response, result);
